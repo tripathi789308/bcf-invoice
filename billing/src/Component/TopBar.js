@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Appbar,Title,Button } from 'react-native-paper';
 import { StyleSheet,Image } from 'react-native';
+import {createXL} from '../Screens/Print.js'
 
 function TopBar(props) {
     const navigation = props.navigation;
@@ -18,13 +19,7 @@ function TopBar(props) {
         mode="contained" 
         icon={require('../../assets/printer-pos.png')}
         style={styles.image}
-        onPress={()=>{
-          console.log('click');
-          navigation.navigate('print',{
-            billno:billno,
-            date:date
-          })
-        }}
+        onPress={()=>createXL(billno)}
         >
         Print
         </Button> 

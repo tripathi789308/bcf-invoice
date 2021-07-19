@@ -1,73 +1,44 @@
-import React from 'react';
-import {Image,StyleSheet,ScrollView,Dimensions,View} from 'react-native'
-
-
-var img = require('../../assets/header.png')
-
-const win = Dimensions.get('window');
-
-export default function Print({route,navigation}){
-    const {billno,date} = route.params;
-    console.log(billno);
-    console.log(date);
-    console.log(win.width)
-    console.log(img.width)
-    return(
-        <ScrollView style={styles.container}>
-            <Image 
-            style={styles.header}
-            source={require('../../assets/header.png')} />
-            <View style={styles.section}>
-                <View style={styles.sectionA} >
-
-                </View>
-                <View style={styles.sectionB}>
-
-                </View>
-            </View>
-            <View style={styles.sectionnew}>
-
-            </View>
-
-        </ScrollView>
-    )
-}
-
-const styles = StyleSheet.create({
-    header : {
-        width:win.width
-    },
-    container:{
-        width:win.width,
-        flexDirection:"column",
-        backgroundColor:"white",
-        zIndex:-1
-    },
-    section:{
-        width:"97%",
-        height:40,
-        left:7,
-        top:3,
-        borderColor:"black",
-        borderWidth:1,
-    },
-    sectionA:{
-        width:"60%",
-        height:38,
-        borderRightColor : "#000",
-        borderRightWidth:1
-    },
-    sectionB:{
-        width:"40%",
-        height:38,
-    },
-    sectionnew:{
-        borderColor:"black",
-        borderWidth:1,
-        left:7,
-        top:4,
-        height:15,
-        backgroundColor:"red",
-        width:"97%"
+import XLSX from 'xlsx';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import Storage from "../Storage";
+export const createXL= async(billno) =>{
+    let data=[];
+    try{    
+        data = await Storage.getItem(`bill${billno}`)
+    }catch(e){
+        console.log(e);
     }
-})
+    let sheet = [];
+    data.map((item,index)=>{
+        let row ={
+            "S.No." : index + 1,
+            "Gate Pass No." : item.invoice,
+            "Date" : item.date,
+            "Ex Jayanagar" : "Local",
+            "Package" : item.pkgs,
+            "Rate" : "13.65",
+            "Price" : parseInt(item.pkgs)*13.65
+        }
+        sheet.push(row)
+    })
+    console.log(sheet)
+    var ws = XLSX.utils.json_to_sheet(sheet);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Cities");
+    const wbout = XLSX.write(wb, {
+      type: 'base64',
+      bookType: "xlsx"
+    });
+    const uri = FileSystem.cacheDirectory + `billno${billno}.xlsx`;
+    console.log(`Writing to ${JSON.stringify(uri)}`);
+    await FileSystem.writeAsStringAsync(uri, wbout, {
+      encoding: FileSystem.EncodingType.Base64
+    });
+    
+    await Sharing.shareAsync(uri, {
+      mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      dialogTitle: 'MyWater data',
+      UTI: 'com.microsoft.excel.xlsx'
+    });
+}

@@ -1,6 +1,6 @@
 import React,{useEffect, useState,useRef} from 'react';
 import TopBar from '../Component/TopBar';
-import {View,Text,StyleSheet, ScrollView, Keyboard,SafeAreaView,TextInput} from 'react-native';
+import {View,Text,StyleSheet, ScrollView, Keyboard,SafeAreaView,TextInput,Alert} from 'react-native';
 import {Button,DataTable} from 'react-native-paper';
 import Storage from '../Storage';
 
@@ -51,14 +51,34 @@ export default  function EditBill({route,navigation}){
                 pkgs:pkgs
             }
             values.push(new_values);
+            values.sort(function (a, b) {
+                var dateA = a.date.split('-');
+                var dateB = b.date.split('-');
+                return dateA[2]-dateB[2] || dateA[1]-dateB[1] || dateA[0] - dateB[0]
+            })
             await Storage.setItem(`bill${bill_no}`,values);
         }catch(e){
             console.log(e);
         }
+        }else{
+            Alert.alert(
+                "Enter all details",
+                "enter invoice,date,pkgs to add",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                ],
+                {
+                  cancelable: true,
+                }
+              );
+        }
         setToggle(!toggle);
         setInvoice('');
         setPkgs('');
-        setDate('');}
+        setDate('');
     }
 
     const handleDelete=async()=>{
@@ -76,9 +96,23 @@ export default  function EditBill({route,navigation}){
         }catch(e){
             console.log(e)
         }
+        }else{
+            Alert.alert(
+                "Enter details",
+                "enter delete index to delete",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                ],
+                {
+                  cancelable: true,
+                }
+              );
+        }
         setToggle(!toggle);
         setDeleteIndex('');
-        }
     }
 
     const handleEdit=async()=>{
@@ -102,6 +136,20 @@ export default  function EditBill({route,navigation}){
             }catch(e){
                 console.log(e)
             }
+        }else{
+            Alert.alert(
+                "Enter all details",
+                "enter invoice,date,pkgs and edit index to edit",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                ],
+                {
+                  cancelable: true,
+                }
+              );
         }
         setToggle(!toggle);
         setInvoice('');
@@ -125,12 +173,31 @@ export default  function EditBill({route,navigation}){
                         pkgs:pkgs
                     }
                     values.splice(index,0,new_values);
+                    values.sort(function (a, b) {
+                        var dateA = a.date.split('-');
+                        var dateB = b.date.split('-');
+                        return dateA[2]-dateB[2] || dateA[1]-dateB[1] || dateA[0] - dateB[0]
+                    })
                     await Storage.setItem(`bill${bill_no}`,values);
                 }
 
             }catch(e){
                 console.log(e)
             }
+        }else{
+            Alert.alert(
+                "Enter all details",
+                "enter invoice,date,pkgs and index after which need to be added",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                ],
+                {
+                  cancelable: true,
+                }
+              );
         }
         setToggle(!toggle);
         setInvoice('');

@@ -18,12 +18,12 @@ export default function Home({navigation}){
             }
         }
         FetchData();
-    },[]);
+    },[data]);
 
     return(
         <View>
         <TopBar name="BCF-Invoices" navigation= { navigation} print={false} />
-        <View style={style.list}>
+        <ScrollView style={style.list}>
 
              <Button icon="plus" color="blue" onPress={()=>{
                 navigation.navigate('add-new')
@@ -31,7 +31,7 @@ export default function Home({navigation}){
 
             <Text style={style.text}>Tap the Bill Number to Edit</Text>
         <ScrollView>  
-        {data.map((item,index)=>(
+        {data.slice(0).reverse().map((item,index)=>(
             <TouchableOpacity key = {index}style={style.touchable} 
             onPress={()=>{
                 navigation.navigate('edit-bill',{
@@ -45,7 +45,7 @@ export default function Home({navigation}){
             
         ))}
         </ScrollView> 
-        </View>
+        </ScrollView>
        
         </View>
     )

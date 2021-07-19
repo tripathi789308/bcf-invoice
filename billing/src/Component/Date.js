@@ -12,7 +12,9 @@ export default function DatePick(props) {
   const [isDone,setDone] =useState(false);
   var day=date.getDate();
   var month=date.getMonth();
+  month+=1
   var year=date.getFullYear();
+  const navigation = props.navigation
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -28,10 +30,6 @@ export default function DatePick(props) {
   const showDatepicker = () => {
     showMode('date');
   };
-  const showConsole = async()=>{
-      let obj=await Storage.getItem('all_bills');
-      console.log(obj);
-  }
 
   const handlePress=async()=>{
     try{
@@ -46,8 +44,9 @@ export default function DatePick(props) {
            try{
             await Storage.setItem('all_bills',obj);
             setDone(true);
+
             if(isDone){
-              props.navigation.navigate('edit-bill',{
+              navigation.navigate('edit-bill',{
                 bill_no:props.billno,
                 date : day+'-'+month +'-' +year
               })}
@@ -63,7 +62,8 @@ export default function DatePick(props) {
             await Storage.setItem('all_bills',obj);
             setDone(true);
             if(isDone){
-                props.navigation.navigate('edit-bill',{
+              console.log(isDone)
+                navigation.navigate('edit-bill',{
                   bill_no:props.billno,
                   date : day+'-'+month +'-' +year
                 })}
@@ -96,8 +96,7 @@ export default function DatePick(props) {
       )}
 
         <Button color="blue" mode="contained" style={style.button} onPress={handlePress}>Set</Button>
-        <Button color="blue" onPress={showConsole}>console</Button>
-        {isDone ?<Title style={style.text}>Go to Edit Page to edit your bill</Title> :<></>}
+        {isDone ?<Title style={style.text}>Go to Home Page to edit your bill</Title> :<></>}
     </View>
 
   );
