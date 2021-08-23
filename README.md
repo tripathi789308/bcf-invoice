@@ -1,5 +1,8 @@
 # bcf-invoice
 
+# To view the working of the app
+https://drive.google.com/file/d/1cBrwMKrkgG-G3tA1iu9Xn-cgwY7UJVHB/view?usp=drivesdk
+
 ## To run this project on your system.
 ## Follow this steps
 
