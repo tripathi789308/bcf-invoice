@@ -14,6 +14,13 @@ cd billing
 ```
 yarn
 ```
+### Optional
+```
+npm install -g yarn
+```
+```
+npm install -g expo
+```
 ### Step 3
 Start your emulator.
 
